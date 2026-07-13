@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathVerse - Learn & Solve</title>
+    <style>
+        :root {
+            /* Cosmic & Midnight Lunar Palette */
+            --bg-dark: #070714;           /* Deep midnight space blue */
+            --panel-dark: rgba(13, 13, 33, 0.7); /* Frosted starlight panel */
+            --primary-accent: #3b82f6;   /* Radiant Star Blue */
+            --secondary-accent: #a855f7; /* Cosmic Violet / Nebula Purple */
+            --text-light: #f8fafc;       /* Bright Starlight White */
+            --text-muted: #94a3b8;       /* Soft Moonlit Gray */
+            --card-border: rgba(59, 130, 246, 0.2); /* Subtle celestial glow border */
+            --lunar-glow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            color: var(--text-light);
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 100%, #1e1b4b, #090912, #020205);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* --- Dynamic Meteor & Star Layer --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            opacity: 0.7;
+        }
+
+        /* Continuous CSS Meteor Animations */
+        .meteor-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            box-shadow: 0 0 10px #fff, 0 0 20px var(--primary-accent);
+            animation: shoot 4s linear infinite;
+            opacity: 0;
+        }
+
+        .meteor:nth-child(1) { top: 10%; left: 40%; animation-delay: 0s; animation-duration: 6s; }
+        .meteor:nth-child(2) { top: 25%; left: 70%; animation-delay: 2.5s; animation-duration: 5s; }
+        .meteor:nth-child(3) { top: 5%; left: 85%; animation-delay: 5s; animation-duration: 7s; }
+        .meteor:nth-child(4) { top: 40%; left: 20%; animation-delay: 1.2s; animation-duration: 4s; }
+
+        @keyframes shoot {
+            0% {
+                transform: rotate(-35deg) translateX(0) scale(0);
+                opacity: 0;
+            }
+            1% { opacity: 1; transform: rotate(-35deg) translateX(0) scale(1); }
+            10% {
+                transform: rotate(-35deg) translateX(-300px) scale(1);
+                width: 120px;
+                opacity: 0;
+            }
+            100% { opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(5, 5, 15, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 1.2rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        nav .logo {
+            color: var(--text-light);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        nav .logo span {
+            color: var(--primary-accent);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 8px #fff;
+        }
+
+        /* Layout Structure */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            min-height: 85vh;
+            background: var(--panel-dark);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 40%, var(--primary-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        /* Home Section & Hero */
+        #home {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+        }
+
+        .home-content {
+            flex: 1;
+        }
+
+        .home-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 50%, var(--secondary-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .home-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 500px;
+        }
+
+        /* Lunar Dark Calculator */
+        .calc-container {
+            background: rgba(10, 10, 22, 0.9);
+            padding: 1.8rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(255,255,255,0.1);
+            width: 340px;
+        }
+
+        #calc-screen {
+            width: 100%;
+            height: 70px;
+            background: #05050d;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            margin-bottom: 1.2rem;
+            font-size: 2rem;
+            text-align: right;
+            padding: 0 1.2rem;
+            color: var(--primary-accent);
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.9), 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .calc-buttons button {
+            padding: 1.1rem;
+            font-size: 1.25rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-light);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .calc-buttons button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .calc-buttons button.operator {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .calc-buttons button.operator:hover {
+            background: var(--primary-accent);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .calc-buttons button.clear {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .calc-buttons button.clear:hover {
+            background: #ef4444;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Formulas Cards Grid */
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .formula-card {
+            background: rgba(15, 15, 35, 0.5);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary-accent);
+            box-shadow: var(--lunar-glow);
+        }
+
+        .formula-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+        }
+
+        .formula-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-size: 1.4rem;
+        }
+
+        .formula-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .formula-card input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin: 0.6rem 0;
+            background: #06060f;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .formula-card input:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+
+        .formula-card button {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .formula-card button:hover {
+            opacity: 0.9;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .result-box {
+            margin-top: 1.2rem;
+            font-weight: 600;
+            color: #34d399; /* Clean crystal green for matching metrics */
+            font-size: 1.1rem;
+            min-height: 24px;
+        }
+
+        /* Modern Contact Card Layout */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 4rem;
+            background: rgba(10, 10, 25, 0.5);
+            padding: 3.5rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border: 1px solid var(--card-border);
+            margin-top: 2rem;
+        }
+
+        .profile-side {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .profile-side h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+        }
+
+        .social-links p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 0.4rem;
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-accent);
+            text-decoration: underline;
+        }
+
+        .contact-form h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            background: #06060f;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+        }
+
+        .contact-form button {
+            background: var(--primary-accent);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .contact-form button:hover {
+            background: var(--secondary-accent);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 968px) {
+            #home { flex-direction: column; text-align: center; gap: 3rem; }
+            .home-content p { margin: 0 auto; }
+            nav { flex-direction: column; gap: 1.2rem; padding: 1.5rem; }
+            nav ul li { margin: 0 1rem; }
+            section { padding: 4rem 1.5rem; margin: 1.5rem; }
+            .contact-container { padding: 2rem; gap: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="meteor-container">
+        <div class="meteor"></div>
+        <div class="meteor"></div>
+        <div class="meteor"></div>
+        <div class="meteor"></div>
+    </div>
+
+    <nav>
+        <div class="logo">📐 Math<span>Verse</span></div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#formulas">Formulas</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="home-content">
+            <h1>Master Math Easily</h1>
+            <p>Welcome to MathVerse! Your all-in-one platform to study formulas, test equations, and crunch numbers instantly.</p>
+        </div>
+        
+        <div class="calc-container">
+            <input type="text" id="calc-screen" readonly>
+            <div class="calc-buttons">
+                <button class="clear" onclick="clearScreen()">C</button>
+                <button onclick="appendValue('(')">(</button>
+                <button onclick="appendValue(')')">)</button>
+                <button class="operator" onclick="appendValue('/')">/</button>
+                
+                <button onclick="appendValue('7')">7</button>
+                <button onclick="appendValue('8')">8</button>
+                <button onclick="appendValue('9')">9</button>
+                <button class="operator" onclick="appendValue('*')">*</button>
+                
+                <button onclick="appendValue('4')">4</button>
+                <button onclick="appendValue('5')">5</button>
+                <button onclick="appendValue('6')">6</button>
+                <button class="operator" onclick="appendValue('-')">-</button>
+                
+                <button onclick="appendValue('1')">1</button>
+                <button onclick="appendValue('2')">2</button>
+                <button onclick="appendValue('3')">3</button>
+                <button class="operator" onclick="appendValue('+')">+</button>
+                
+                <button onclick="appendValue('0')">0</button>
+                <button onclick="appendValue('.')">.</button>
+                <button class="operator" style="grid-column: span 2; background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent)); border: none;" onclick="calculateResult()">=</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About This Project</h2>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto; font-size: 1.2rem; color: var(--text-muted);">
+            This website was built as a dedicated mathematical resource tool. It aims to bridge the gap between theoretical math equations and practical application. By using our interactive solver engines, students and teachers alike can test geometric and algebraic formulas on the fly.
+        </p>
+    </section>
+
+    <section id="formulas">
+        <h2>Interactive Formula Solvers</h2>
+        <div class="formula-grid">
+            
+            <div class="formula-card">
+                <h3>Area of a Circle</h3>
+                <p>Formula: <i>A = πr²</i></p>
+                <input type="number" id="circle-r" placeholder="Enter radius (r)">
+                <button onclick="solveCircle()">Solve</button>
+                <div class="result-box" id="circle-result"></div>
+            </div>
+
+            <div class="formula-card">
+                <h3>Pythagorean Theorem</h3>
+                <p>Formula: <i>c = √(a² + b²)</i></p>
+                <input type="number" id="py-a" placeholder="Side a">
+                <input type="number" id="py-b" placeholder="Side b">
+                <button onclick="solvePythagoras()">Solve for c</button>
+                <div class="result-box" id="py-result"></div>
+            </div>
+
+            <div class="formula-card">
+                <h3>Area of a Triangle</h3>
+                <p>Formula: <i>A = (b × h) / 2</i></p>
+                <input type="number" id="tri-b" placeholder="Base (b)">
+                <input type="number" id="tri-h" placeholder="Height (h)">
+                <button onclick="solveTriangle()">Solve</button>
+                <div class="result-box" id="tri-result"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <div class="contact-container">
+            
+            <div class="profile-side">
+                <img src="img/vruhh.jpg" alt="Honey Canatoy" class="profile-img">
+                <h3>Honey Canatoy</h3>
+                <p style="margin: 0.5rem 0; color: var(--text-muted)">📞 Phone: 09093106711</p>
+                
+                <div class="social-links">
+                    <p><b>Find me on:</b></p>
+                    <a href="https://www.facebook.com/anitah.maxyn" target="_blank">Facebook</a> | 
+                    <a href="https://www.instagram.com/hnzygc_" target="_blank">Instagram</a> | 
+                    <a href="https://www.tiktok.com/@wonieedrei_?_r=1&_t=ZS-97uJxN509HY" target="_blank">TikTok</a>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h3>Send a Message</h3>
+                <form action="https://formspree.io/f/canatoyhonecy@gmail.com" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="_replyto" placeholder="Your Email Address" required>
+                    <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                    <button type="submit">Submit Message</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        /* --- Calculator Logic --- */
+        const screen = document.getElementById('calc-screen');
+
+        function appendValue(val) {
+            screen.value += val;
+        }
+
+        function clearScreen() {
+            screen.value = '';
+        }
+
+        function calculateResult() {
+            try {
+                screen.value = eval(screen.value);
+            } catch (error) {
+                screen.value = 'Error';
+            }
+        }
+
+        /* --- Formula Solvers Logic --- */
+        function solveCircle() {
+            const r = document.getElementById('circle-r').value;
+            if(r) {
+                const ans = Math.PI * Math.pow(r, 2);
+                document.getElementById('circle-result').innerHTML = `Answer: A = ${ans.toFixed(2)}`;
+            } else {
+                document.getElementById('circle-result').innerHTML = "Please enter a value.";
+            }
+        }
+
+        function solvePythagoras() {
+            const a = document.getElementById('py-a').value;
+            const b = document.getElementById('py-b').value;
+            if(a && b) {
+                const ans = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+                document.getElementById('py-result').innerHTML = `Answer: c = ${ans.toFixed(2)}`;
+            } else {
+                document.getElementById('py-result').innerHTML = "Please fill in both sides.";
+            }
+        }
+
+        function solveTriangle() {
+            const b = document.getElementById('tri-b').value;
+            const h = document.getElementById('tri-h').value;
+            if(b && h) {
+                const ans = (b * h) / 2;
+                document.getElementById('tri-result').innerHTML = `Answer: A = ${ans.toFixed(2)}`;
+            } else {
+                document.getElementById('tri-result').innerHTML = "Please fill in both base and height.";
+            }
+        }
+    </script>
+</body>
+</html>
